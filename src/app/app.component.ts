@@ -19,6 +19,10 @@ export class AppComponent {
   todolist:TodoItem [] = [];
   newTask:string = '';
 
+  ngOnInit():void {
+    this.loadTasks();
+  }
+
   addTask():void {
     if(this.newTask.trim() !== ''){
 
@@ -32,16 +36,31 @@ export class AppComponent {
 
       this.todolist.push(newTodoItem)
       this.newTask = ''
+      this.saveTasks();
     }
   }
 
   toggleComplted(index:number):void {
     this.todolist[index].completed =!this.todolist[index].completed
     console.log(this.todolist);
+    this.saveTasks();
   }
 
   deleteTask(id:number):void {
     this.todolist = this.todolist.filter(item => item.id != id)
     console.log(this.todolist)
+    this.saveTasks();
   }
+
+  saveTasks():void {
+    localStorage.setItem('todolist', JSON.stringify(this.todolist))
+  }
+
+  loadTasks():void {
+    const savedTasks = localStorage.getItem('todolist')
+    if(savedTasks){
+      this.todolist = JSON.parse(savedTasks)
+    }
+  }
+
 }
